@@ -1,0 +1,89 @@
+# config/config.yaml
+
+# Purpose: This file contains all the configuration settings for the Music Emotion Recognition project.
+# Author: Your Name/Team Name
+# Date: 2025-06-03
+# Version: 1.0.0
+# Description:
+#   This YAML file centralizes various parameters required across different phases of the project,
+#   including data paths, model hyperparameters, and application-specific settings.
+#   It aims to provide a single source of truth for configurations, enhancing readability and maintainability.
+
+# --- Global Settings ---
+global:
+  project_name: "Music Emotion Recognition"
+  random_seed: 42 # For reproducibility of results
+  output_dir: "reports/" # Directory to save generated reports and figures
+
+# --- Data Settings ---
+data:
+  raw_data_path: "src/data/raw/spotify_dataset.csv" # Path to the original raw dataset
+  processed_data_dir: "src/data/processed/" # Directory to save cleaned and preprocessed data
+  train_file: "train_data.csv" # Name of the processed training data file
+  val_file: "val_data.csv" # Name of the processed validation data file
+  test_file: "test_data.csv" # Name of the processed test data file
+  target_column: "emotion" # The column containing the emotion labels
+  text_column: "text" # Column containing lyrical text
+
+# --- Preprocessing Settings ---
+preprocessing:
+  # Missing value handling strategies for specific columns
+  missing_value_strategy_categorical: "drop" # e.g., 'drop', 'impute_mode'
+  time_signature_imputation: "mode" # Imputation strategy for 'Time signature'
+  
+  length_conversion_format: "MM:SS" # Format of the 'Length' column ('MM:SS' or 'HH:MM:SS')
+  loudness_suffix_to_remove: "db" # Suffix to remove from 'Loudness (db)' column
+  
+  release_date_feature_type: "year" # 'year', 'month', 'day', 'days_since_epoch'
+  date_ordinal_suffixes: ["st", "nd", "rd", "th"] # Ordinal suffixes to remove from dates
+
+  key_encoding: "one-hot" # Encoding for 'Key' column ('one-hot', 'label')
+  explicit_mapping: {"Yes": 1, "No": 0} # Mapping for 'Explicit' column
+  
+  emotion_cleaning_map: # Mapping for inconsistent 'emotion' values
+    "Love": "love"
+    "True": "joy" # Example mapping, research needed for actual values
+    "pink": "joy" # Example mapping, research needed for actual values
+    "angry": "anger" # Example mapping, research needed for actual values
+    "thirst": "joy" # Example mapping, research needed for actual values
+    "confusion": "surprise" # Example mapping, research needed for actual values
+    "interest": "joy" # Example mapping, research needed for actual values
+    # Add more mappings as discovered during EDA
+  rare_emotion_threshold: 10 # Threshold for flagging rare emotion categories for review
+  
+  outlier_handling_method: "capping_iqr" # Method for outlier handling ('capping_iqr', 'log_transform', 'none')
+  numerical_scaling_method: "standard_scaler" # Scaling method for numerical features ('standard_scaler', 'min_max_scaler', 'none')
+  
+  text_vectorization_method: "transformer_embeddings" # 'tf-idf', 'transformer_embeddings'
+  genre_handling_method: "one-hot" # 'primary_genre', 'one-hot'
+  fill_na_string: "" # String to fill NaN values in categorical columns like Genre, Artists, Similar Artists
+
+  test_size: 0.1 # Percentage of data to use for the test set
+  validation_size: 0.1 # Percentage of data to use for the validation set (from training data)
+
+# --- Model Settings ---
+model:
+  architecture: "multimodal_fusion_transformer_fnn" # Chosen model architecture
+  transformer_model_name: "bert-base-uncased" # Pre-trained transformer model name
+  fnn_layers: [128, 64] # Layers for Feed-forward Neural Network
+  learning_rate: 2e-5 # Learning rate for model training
+  batch_size: 32 # Batch size for training
+  epochs: 3 # Number of training epochs
+  optimizer: "AdamW"
+  loss_function: "CrossEntropyLoss"
+  evaluation_metrics: ["accuracy", "precision", "recall", "f1_score", "confusion_matrix"] #
+  saved_model_path: "models/transformers/emotion_classifier_bert/" # Path to save trained model
+  saved_scaler_path: "models/scalers/scaler.pkl" # Path to save trained scaler
+
+# --- Deployment Settings (Optional) ---
+deployment:
+  enable_api: false # Set to true if deploying an API
+  api_framework: "Flask" # 'Flask' or 'FastAPI'
+  api_host: "0.0.0.0"
+  api_port: 8000
+  docker_enabled: true # Whether to create a Dockerfile for deployment
+
+# --- Logging Settings ---
+logging:
+  level: "INFO" # Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+  log_file: "project_log.log" # Name of the log file

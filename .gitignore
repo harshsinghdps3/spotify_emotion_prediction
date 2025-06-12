@@ -37,6 +37,8 @@ tests
 *.manifest
 *.spec
 
+src\data\raw
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
