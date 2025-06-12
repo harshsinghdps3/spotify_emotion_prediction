@@ -27,7 +27,7 @@ share/python-wheels/
 MANIFEST
 
 
-src\data
+src\data\raw\spotify_dataset.csv
 sep
 reports
 tests
@@ -37,7 +37,7 @@ tests
 *.manifest
 *.spec
 
-src\data\raw
+
 
 # Installer logs
 pip-log.txt
