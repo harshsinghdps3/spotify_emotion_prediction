@@ -28,7 +28,7 @@ data:
 # --- Preprocessing Settings ---
 preprocessing:
   # Missing value handling strategies for specific columns
-  missing_value_strategy_categorical: "drop" # e.g., 'drop', 'impute_mode'
+  missing_value_strategy: "drop" # Strategy to drop rows with any missing values
   time_signature_imputation: "mode" # Imputation strategy for 'Time signature'
   
   length_conversion_format: "MM:SS" # Format of the 'Length' column ('MM:SS' or 'HH:MM:SS')
@@ -37,7 +37,7 @@ preprocessing:
   release_date_feature_type: "year" # 'year', 'month', 'day', 'days_since_epoch'
   date_ordinal_suffixes: ["st", "nd", "rd", "th"] # Ordinal suffixes to remove from dates
 
-  key_encoding: "one-hot" # Encoding for 'Key' column ('one-hot', 'label')
+  key_encoding: "label" # Encoding for 'Key' column ('one-hot', 'label')
   explicit_mapping: {"Yes": 1, "No": 0} # Mapping for 'Explicit' column
   
   emotion_cleaning_map: # Mapping for inconsistent 'emotion' values
@@ -50,12 +50,19 @@ preprocessing:
     "interest": "joy" # Example mapping, research needed for actual values
     # Add more mappings as discovered during EDA
   rare_emotion_threshold: 10 # Threshold for flagging rare emotion categories for review
-  
+
+  # Duplicate handling strategy
+  duplicate_handling:
+    strategy: "keep_first" # Options: 'drop', 'keep_first', 'keep_last', 'none'
+    subset: null # List of columns to consider for identifying duplicates, null means all columns
+
   outlier_handling_method: "capping_iqr" # Method for outlier handling ('capping_iqr', 'log_transform', 'none')
   numerical_scaling_method: "standard_scaler" # Scaling method for numerical features ('standard_scaler', 'min_max_scaler', 'none')
   
   text_vectorization_method: "transformer_embeddings" # 'tf-idf', 'transformer_embeddings'
   genre_handling_method: "one-hot" # 'primary_genre', 'one-hot'
+  genre_split_delimiter: "," # Delimiter for splitting multiple genres
+  genre_wrap_as_list: true # Wrap each genre entry as a list after cleaning
   fill_na_string: "" # String to fill NaN values in categorical columns like Genre, Artists, Similar Artists
 
   test_size: 0.1 # Percentage of data to use for the test set
